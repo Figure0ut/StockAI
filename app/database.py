@@ -11,7 +11,7 @@ engine = create_engine (
 )
 
 # SESSION FOR DATABASE
-SessionLocal = sessionmaker(autocommit=False, autoFlush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # DATABASE DECLARATION
 Base = declarative_base()
