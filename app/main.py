@@ -1,9 +1,24 @@
+import os
+import google.generativeai as genai
+from google.generativeai import types
+from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import models, schemas
 from app.database import engine, SessionLocal
 
+load_dotenv()
+
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    print("API Key not found. Please check .env file.")
+else:
+    genai.configure(api_key=api_key)
+
 models.Base.metadata.create_all(bind=engine)
+
+load_dotenv()
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 app = FastAPI()
 
@@ -67,3 +82,26 @@ def delete_item(item_id: int, db: Session = Depends(get_db)):
     db.commit()
     return { "message" : "Item deleted successfully" }
 
+@app.post("/analyze-stock")
+def analyze_stock(db: Session = Depends(get_db)):
+    items = db.query(models.Item).all()
+    if not items:
+        raise HTTPException(status_code=404, detail="No items found in the database")
+
+    stock_data = [
+        {
+            "name": item.name,
+            "quantity": item.quantity,
+            "price": item.price,
+            "category": item.category
+        }
+        for item in items
+    ]
+
+    prompt = f"Analyze the following stock data and provide insights as an expert in finance and supply chain management:\n{stock_data}"
+
+    model = genai.GenerativeModel('gemini-flash-latest')
+    
+    response = model.generate_content(prompt)
+
+    return { "analysis" : response.text }
