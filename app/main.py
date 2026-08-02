@@ -116,14 +116,8 @@ def analyze_stock(db: Session = Depends(get_db)):
 
     model = genai.GenerativeModel('gemini-flash-latest')
     
-    generation_config = genai.types.GenerationConfig(
-        max_output_tokens=650,
-        temperature=0.8
-    )
-    
     response = model.generate_content(
         prompt, 
-        generation_config=generation_config
     )
 
     return { "analysis" : response.text }
