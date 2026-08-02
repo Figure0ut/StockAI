@@ -114,7 +114,7 @@ def analyze_stock(db: Session = Depends(get_db)):
 
     prompt = f"Act as a supply chain expert. Analyze this inventory data and provide a concise, high-impact strategic summary in maximum 3 bullet points. Do not use long paragraphs:\n{stock_data}"
 
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    model = genai.GenerativeModel('gemini-flash-latest')
     
     generation_config = genai.types.GenerationConfig(
         max_output_tokens=200,
