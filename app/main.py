@@ -18,13 +18,13 @@ else:
 
 models.Base.metadata.create_all(bind=engine)
 
-load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 app = FastAPI()
 
 origins = [
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
     
 ]
 
