@@ -25,7 +25,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://stock-ai-phi-beryl.vercel.app/",
+    "https://stock-ai-phi-beryl.vercel.app"
 ]
 
 app.add_middleware(
